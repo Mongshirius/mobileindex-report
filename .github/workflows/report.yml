@@ -1,0 +1,45 @@
+name: Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "리포트 기준일 (YYYY-MM-DD, 비우면 오늘)"
+        required: false
+        type: string
+  # 발송 주기 미정 — 데이터 특성 확인 후 아래 cron 활성화 (UTC 기준).
+  # KST 08:00 = 전날 23:00 UTC → "0 23 * * *"
+  # schedule:
+  #   - cron: "0 23 * * *"
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install .
+      - name: Run pipeline
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          REPORT_TZ: ${{ secrets.REPORT_TZ }}
+        run: |
+          if [ -n "${{ inputs.date }}" ]; then
+            python -m report_pipeline --date "${{ inputs.date }}"
+          else
+            python -m report_pipeline
+          fi
+      - name: Upload workbook on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-xlsx
+          path: build/*.xlsx
+          if-no-files-found: ignore
