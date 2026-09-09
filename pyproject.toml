@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mobileindex-report"
+version = "0.1.0"
+description = "모바일인덱스 데이터를 엑셀 리포트로 만들어 이메일 발송하는 자동화 파이프라인"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.0",
+    "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+mobileindex-report = "report_pipeline.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/report_pipeline"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
