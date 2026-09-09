@@ -7,10 +7,10 @@ on:
         description: "Report date (YYYY-MM-DD); blank = today"
         required: false
         type: string
-  # Send cadence undecided. Uncomment the schedule below once decided (UTC).
-  # KST 08:00 == 23:00 UTC the previous day == "0 23 * * *"
-  # schedule:
-  #   - cron: "0 23 * * *"
+  # TEST ONLY: every 5 minutes. Revert to a commented block when the test is done.
+  # Production cadence (undecided): e.g. "0 23 * * *" == KST 08:00 (UTC-based).
+  schedule:
+    - cron: "*/5 * * * *"
 
 jobs:
   send-report:
