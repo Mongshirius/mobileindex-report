@@ -38,11 +38,14 @@ def _unquote(value: str) -> str:
 
 def load_settings(environ: dict[str, str] | None = None) -> Settings:
     env = os.environ if environ is None else environ
-    present = {
-        key: _unquote(env[key])
-        for key in _REQUIRED
-        if env.get(key, "").strip()
-    }
+    present: dict[str, str] = {}
+    for key in _REQUIRED:
+        raw = env.get(key)
+        if raw is None:
+            continue
+        value = _unquote(raw)
+        if value.strip():
+            present[key] = value
     missing = [key for key in _REQUIRED if key not in present]
     if missing:
         raise ConfigError(f"필수 환경변수 누락: {', '.join(missing)}")

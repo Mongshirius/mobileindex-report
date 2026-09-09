@@ -15,8 +15,11 @@ _ENV = {
 
 def test_load_settings_reads_all_fields():
     settings = load_settings(dict(_ENV))
-    assert settings.smtp_port == 587
     assert settings.smtp_host == "smtp.gmail.com"
+    assert settings.smtp_port == 587
+    assert settings.smtp_user == "sender@gmail.com"
+    assert settings.smtp_password == "app-password-1234"
+    assert settings.mail_from == "sender@gmail.com"
     assert settings.mail_to == "me@company.example"
     assert settings.report_tz == "Asia/Seoul"
 
@@ -36,6 +39,16 @@ def test_load_settings_treats_blank_as_missing():
     env["SMTP_PASSWORD"] = "   "
     with pytest.raises(ConfigError):
         load_settings(env)
+
+
+def test_load_settings_treats_quoted_empty_as_missing():
+    env = dict(_ENV)
+    env["SMTP_PASSWORD"] = '""'
+    env["MAIL_TO"] = '"   "'
+    with pytest.raises(ConfigError) as exc:
+        load_settings(env)
+    assert "SMTP_PASSWORD" in str(exc.value)
+    assert "MAIL_TO" in str(exc.value)
 
 
 def test_load_settings_strips_wrapping_quotes():
