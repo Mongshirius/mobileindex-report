@@ -1,0 +1,6 @@
+.env.local
+build/
+__pycache__/
+*.xlsx
+.pytest_cache/
+*.egg-info/
