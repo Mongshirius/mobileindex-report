@@ -7,13 +7,10 @@ on:
         description: "Report date (YYYY-MM-DD); blank = today"
         required: false
         type: string
-  # Send cadence undecided. Uncomment and set a cron once decided (UTC-based).
-  # KST 08:00 == "0 23 * * *"  (23:00 UTC the previous day)
-  # NOTE: GitHub cron is unreliable for high-frequency schedules (e.g. */5) on new
-  # public repos; daily/weekly cadences run far more consistently. Manual runs via
-  # the Actions "Run workflow" button (workflow_dispatch) are verified working.
-  # schedule:
-  #   - cron: "0 23 * * *"
+  # Daily at 23:00 UTC == 08:00 KST (the next day). Cron is always UTC.
+  # GitHub may run scheduled workflows some minutes late; fine for a daily report.
+  schedule:
+    - cron: "0 23 * * *"
 
 jobs:
   send-report:
