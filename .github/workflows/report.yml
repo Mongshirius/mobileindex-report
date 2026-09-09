@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       date:
-        description: "리포트 기준일 (YYYY-MM-DD, 비우면 오늘)"
+        description: "Report date (YYYY-MM-DD); blank = today"
         required: false
         type: string
-  # 발송 주기 미정 — 데이터 특성 확인 후 아래 cron 활성화 (UTC 기준).
-  # KST 08:00 = 전날 23:00 UTC → "0 23 * * *"
+  # Send cadence undecided. Uncomment the schedule below once decided (UTC).
+  # KST 08:00 == 23:00 UTC the previous day == "0 23 * * *"
   # schedule:
   #   - cron: "0 23 * * *"
 
@@ -16,6 +16,8 @@ jobs:
   send-report:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
