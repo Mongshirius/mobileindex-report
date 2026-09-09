@@ -1,6 +1,9 @@
 .env.local
 build/
-__pycache__/
-*.xlsx
-.pytest_cache/
+dist/
 *.egg-info/
+__pycache__/
+.pytest_cache/
+*.xlsx
+.venv/
+.superpowers/
