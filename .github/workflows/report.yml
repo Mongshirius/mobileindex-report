@@ -7,10 +7,13 @@ on:
         description: "Report date (YYYY-MM-DD); blank = today"
         required: false
         type: string
-  # TEST ONLY: every 5 minutes. Revert to a commented block when the test is done.
-  # Production cadence (undecided): e.g. "0 23 * * *" == KST 08:00 (UTC-based).
-  schedule:
-    - cron: "*/5 * * * *"
+  # Send cadence undecided. Uncomment and set a cron once decided (UTC-based).
+  # KST 08:00 == "0 23 * * *"  (23:00 UTC the previous day)
+  # NOTE: GitHub cron is unreliable for high-frequency schedules (e.g. */5) on new
+  # public repos; daily/weekly cadences run far more consistently. Manual runs via
+  # the Actions "Run workflow" button (workflow_dispatch) are verified working.
+  # schedule:
+  #   - cron: "0 23 * * *"
 
 jobs:
   send-report:
