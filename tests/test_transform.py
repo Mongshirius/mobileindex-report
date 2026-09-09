@@ -1,6 +1,7 @@
 from datetime import date
 
 import pandas as pd
+import pytest
 
 from report_pipeline.transform import ReportData, transform
 
@@ -14,6 +15,12 @@ def _sample_raw() -> pd.DataFrame:
         ],
         columns=["date", "app_name", "dau", "installs", "revenue"],
     )
+
+
+def test_transform_raises_when_required_column_missing():
+    raw = _sample_raw().drop(columns=["app_name"])
+    with pytest.raises(ValueError, match="app_name"):
+        transform(raw, date(2026, 9, 9))
 
 
 def test_transform_returns_report_data_with_two_sheets():

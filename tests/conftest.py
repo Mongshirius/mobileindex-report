@@ -12,5 +12,5 @@ def settings() -> Settings:
         smtp_password="secret",
         mail_from="sender@example.com",
         mail_to="me@company.example",
-        report_tz="Asia/Seoul",
+        report_tz="America/New_York",
     )

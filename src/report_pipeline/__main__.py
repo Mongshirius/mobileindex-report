@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import sys
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
@@ -40,6 +41,12 @@ def main(argv: list[str] | None = None) -> int:
 
     _load_dotenv()
     settings = load_settings()
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+
     run_date = args.run_date or datetime.now(ZoneInfo(settings.report_tz)).date()
 
     summary = run(settings, run_date)

@@ -15,6 +15,7 @@ on:
 jobs:
   send-report:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -23,6 +24,7 @@ jobs:
       - run: pip install .
       - name: Run pipeline
         env:
+          RUN_DATE: ${{ inputs.date }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
@@ -31,8 +33,8 @@ jobs:
           MAIL_TO: ${{ secrets.MAIL_TO }}
           REPORT_TZ: ${{ secrets.REPORT_TZ }}
         run: |
-          if [ -n "${{ inputs.date }}" ]; then
-            python -m report_pipeline --date "${{ inputs.date }}"
+          if [ -n "$RUN_DATE" ]; then
+            python -m report_pipeline --date "$RUN_DATE"
           else
             python -m report_pipeline
           fi

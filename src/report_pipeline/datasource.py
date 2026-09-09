@@ -17,6 +17,10 @@ import pandas as pd
 from .config import Settings
 
 COLUMNS = ["date", "app_name", "dau", "installs", "revenue"]
+# 반환 스키마 계약 (2단계에서도 유지해야 한다):
+#   date       -> ISO-8601 날짜 문자열 ("YYYY-MM-DD"), datetime 아님
+#   app_name   -> str
+#   dau, installs, revenue -> 숫자형
 APPS = ["앱A", "앱B", "앱C"]
 LOOKBACK_DAYS = 7
 

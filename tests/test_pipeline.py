@@ -1,7 +1,9 @@
 from datetime import date
 from pathlib import Path
 
+from report_pipeline.datasource import fetch
 from report_pipeline.pipeline import run
+from report_pipeline.transform import transform
 
 
 def test_run_wires_all_stages(settings, tmp_path, monkeypatch):
@@ -26,6 +28,12 @@ def test_run_wires_all_stages(settings, tmp_path, monkeypatch):
     assert result["row_count"] == 21  # datasource: 7일 * 3앱
     assert "행 수: 21" in captured["body"]
     assert captured["attachment"] == Path(result["attachment"])
+
+
+def test_run_threads_report_tz_into_transform(settings):
+    raw = fetch(settings, date(2026, 9, 9))
+    data = transform(raw, date(2026, 9, 9), settings.report_tz)
+    assert data.summary["generated_at"].endswith(("-04:00", "-05:00"))
 
 
 def test_run_writes_into_build_dir(settings, tmp_path, monkeypatch):

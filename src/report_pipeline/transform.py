@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 METRIC_COLUMNS = ["dau", "installs", "revenue"]
+_REQUIRED_COLUMNS = {"date", "app_name", *METRIC_COLUMNS}
 
 
 @dataclass
@@ -16,6 +17,9 @@ class ReportData:
 
 
 def transform(raw: pd.DataFrame, run_date: date, tz: str = "Asia/Seoul") -> ReportData:
+    missing = _REQUIRED_COLUMNS - set(raw.columns)
+    if missing:
+        raise ValueError(f"입력 데이터에 필수 컬럼이 없습니다: {sorted(missing)}")
     summary_sheet = (
         raw.groupby("app_name", as_index=False)[METRIC_COLUMNS].sum()
     )

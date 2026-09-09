@@ -8,6 +8,7 @@ from pathlib import Path
 from .config import Settings
 
 MAX_ATTEMPTS = 3
+SMTP_TIMEOUT_SECONDS = 30
 _XLSX_MAINTYPE = "application"
 _XLSX_SUBTYPE = "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
@@ -43,7 +44,9 @@ def _build_message(settings: Settings, subject: str, body: str, attachment: Path
 
 
 def _deliver(settings: Settings, message: EmailMessage) -> None:
-    with smtplib.SMTP(settings.smtp_host, settings.smtp_port) as server:
+    with smtplib.SMTP(
+        settings.smtp_host, settings.smtp_port, timeout=SMTP_TIMEOUT_SECONDS
+    ) as server:
         server.starttls()
         server.login(settings.smtp_user, settings.smtp_password)
         server.send_message(message)
